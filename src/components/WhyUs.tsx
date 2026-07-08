@@ -14,11 +14,6 @@ const advantages = [
   { icon: MapPin, title: 'Удобное расположение', desc: 'У метро, парковка, зона ожидания с Wi-Fi, кофе и детьми не скучно.' },
 ]
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
-}
-
 const itemVariants = {
   hidden: { opacity: 0, y: 30 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.23, 1, 0.32, 1] } },
@@ -56,12 +51,14 @@ export function WhyUs() {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: '-100px' }}
-                className={`grid lg:grid-cols-12 gap-8 items-center ${isEven ? '' : 'lg:[grid-template-areas:_"image_content"]'}`}
-                style={{ gridTemplateAreas: isEven ? '"content image"' : '"image content"' }}
+                className="grid lg:grid-cols-12 gap-8 items-start"
               >
+                {/* Content column */}
                 <div
-                  className={`${isEven ? 'lg:col-span-6 lg:col-start-1' : 'lg:col-span-6 lg:col-start-7'} lg:px-8`}
-                  style={{ gridArea: 'content' }}
+                  className={isEven
+                    ? 'lg:col-span-6 lg:col-start-1 lg:pr-8'
+                    : 'lg:col-span-6 lg:col-start-7 lg:pl-8'
+                  }
                 >
                   <div className="w-14 h-14 rounded-xl bg-brand-100 flex items-center justify-center mb-5" aria-hidden="true">
                     <a.icon size={28} className="text-brand-600" />
@@ -70,9 +67,12 @@ export function WhyUs() {
                   <p className="text-neutral-600 leading-relaxed text-base">{a.desc}</p>
                 </div>
 
+                {/* Visual column */}
                 <div
-                  className={`${isEven ? 'lg:col-span-6 lg:col-start-7' : 'lg:col-span-6 lg:col-start-1'} lg:px-8`}
-                  style={{ gridArea: 'image' }}
+                  className={isEven
+                    ? 'lg:col-span-6 lg:col-start-7'
+                    : 'lg:col-span-6 lg:col-start-1'
+                  }
                   aria-hidden="true"
                 >
                   <div className="relative aspect-square max-w-md mx-auto">

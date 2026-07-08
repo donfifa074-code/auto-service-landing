@@ -1,6 +1,6 @@
 'use client'
 
-import { motion, useMotionValue, useSpring, useTransform } from 'motion/react'
+import { motion } from 'motion/react'
 import { useState, useRef, useEffect, FormEvent } from 'react'
 import { Car, Phone, List, X, Check, Spinner } from '@phosphor-icons/react'
 import { Button } from './ui/Button'
@@ -19,10 +19,9 @@ const services = [
 interface Props {
   isOpen: boolean
   onClose: () => void
-  triggerRef?: React.RefObject<HTMLButtonElement>
 }
 
-export function BookingModal({ isOpen, onClose, triggerRef }: Props) {
+export function BookingModal({ isOpen, onClose }: Props) {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -34,23 +33,7 @@ export function BookingModal({ isOpen, onClose, triggerRef }: Props) {
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [errors, setErrors] = useState<Partial<typeof formData>>({})
-  const modalRef = useRef<HTMLDivElement>(null)
   const focusRef = useRef<HTMLInputElement>(null)
-
-  const originX = useMotionValue(0)
-  const originY = useMotionValue(0)
-  const scale = useSpring(originX, { stiffness: 300, damping: 30, mass: 0.8 })
-
-  useEffect(() => {
-    if (triggerRef?.current && isOpen) {
-      const rect = triggerRef.current.getBoundingClientRect()
-      const modalRect = modalRef.current?.getBoundingClientRect()
-      if (modalRect) {
-        originX.set(rect.left + rect.width / 2 - (modalRect.left + modalRect.width / 2))
-        originY.set(rect.top + rect.height / 2 - (modalRect.top + modalRect.height / 2))
-      }
-    }
-  }, [isOpen, triggerRef])
 
   useEffect(() => {
     if (isOpen && !submitted) {
@@ -106,15 +89,11 @@ export function BookingModal({ isOpen, onClose, triggerRef }: Props) {
       />
 
       <motion.div
-        ref={modalRef}
         className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto bg-white rounded-2xl shadow-2xl border"
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 20 }}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-        style={{
-          transformOrigin: 'center center',
-        } as any}
       >
         <div className="sticky top-0 z-10 flex items-center justify-between p-5 border-b bg-white/95 backdrop-blur-sm rounded-t-2xl">
           <h2 id="modal-title" className="text-lg font-semibold text-neutral-900">
@@ -269,7 +248,7 @@ export function BookingModal({ isOpen, onClose, triggerRef }: Props) {
                 id="notes"
                 placeholder="Проблема, пожелания, удобное время..."
                 rows={3}
-                className="input resize-none"
+                 className="input resize-none"
                 value={formData.notes}
                 onChange={(e) => handleChange('notes', e.target.value)}
                 disabled={submitting}
